@@ -82,11 +82,11 @@ class BoostViewSet(viewsets.ModelViewSet):
         return boosts
 
     def partial_update(self, request, pk):
-        coins = request.data['coins']  # Получаем количество монет из тела запроса.
+        coins = request.data['coins']
         boost = self.queryset.get(pk=pk)
 
         is_levelup = boost.levelup(
-            coins)  # Передадим количество монет в метод. Этот метод мы скоро немного подкорректируем.
+            coins)
         if not is_levelup:
             return Response({"error": "Не хватает денег"})
         old_boost_stats, new_boost_stats = is_levelup
@@ -99,16 +99,15 @@ class BoostViewSet(viewsets.ModelViewSet):
 
 @api_view(['POST'])
 def update_coins(request):
-    coins = request.data['current_coins']  # Значение current_coins будем присылать в теле запроса.
+    coins = request.data['current_coins']
     core = Core.objects.get(user=request.user)
 
     is_levelup, boost_type = core.set_coins(
-        coins)  # Метод set_coins скоро добавим в модель. Добавили boost_type для создания буста.
+        coins)
 
-    # Дальнейшая логика осталась прежней, как в call_click
     if is_levelup:
         Boost.objects.create(core=core, price=core.coins, power=core.level * 2,
-                             type=boost_type)  # Создание буста. Добавили атрибут type.
+                             type=boost_type)
     core.save()
 
     return Response({

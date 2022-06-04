@@ -8,11 +8,10 @@ class CoreSerializer(ModelSerializer):
         model = Core
         fields = ['coins', 'click_power', 'auto_click_power', 'next_level_price']
 
-    next_level_price = SerializerMethodField()  # Поле, которое соответствует вычисляемому значению.
+    next_level_price = SerializerMethodField()
 
-    # Метод вычисления значения для поля next_level_price.
     def get_next_level_price(self, obj):
-        return obj.calculate_next_level_price()  # obj - экземпляр модели Core.
+        return obj.calculate_next_level_price()
 
 
 class BoostSerializer(ModelSerializer):
